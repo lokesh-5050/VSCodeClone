@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/style/style.css" />
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div id="main">
+        <div id="homepage">
+            <div class="left">
+                <div class="row">
+                    <h4>Upload</h4>
+
+                    <div class="icons">
+                        <i id="add-file" class="ri-file-add-line"></i>
+                        <i id="add-folder" class="ri-folder-add-line"></i>
+                        <a id="refresh" href="/refresh"><i class="ri-refresh-line"></i></a>
+
+                    </div>
+                </div>
+                <form class="fileform" action="/newfile">
+                    <input autocomplete="off" id="input-file" type="text" placeholder="Filename" name="newfile" />
+                </form>
+
+                <form class="folderform" action="/newfolder">
+                    <input autocomplete="off" id="input-folder" type="text" placeholder="Foldername" name="newfolder" />
+                </form>
+
+                <div class="files">
+
+                    <% files.forEach(function(file){ %>
+
+                        <div class="file">
+                            <form class="renaming" action="/rename/<%=file.name%>">
+                                <a href="/files/<%=file.name%>">
+                                    <i class="ri-file-3-line"></i>
+                                    <span>
+                                        <%=file.name%>
+                                    </span>
+                                </a>
+                                <input type="text" value="<%=file.name%>" name="filename" id="">
+                            </form>
+                            <div class="wrap">
+                                <i id="icon-rename" class="ri-registered-line"></i>
+                                <a href="/unlinkfile/<%=file.name%>"> <i class="ri-delete-bin-line"></i></a>    
+                            </div>
+
+                        </div>
+
+                        <% }) %>
+
+                            <% folders.forEach(function(folder){ %>
+                                <div class="file">
+                                    <a href="/files/<%=folder.name%>">
+                                        <h4> <i class="ri-folder-3-fill"></i>
+                                            <%=folder.name%>
+                                        </h4>
+                                    </a>
+                                    <i id="icon-rename" class="ri-registered-line"></i>
+
+                                    <a href="/unlinkfolder/<%=folder.name%>"> <i class="ri-delete-bin-line"></i></a>
+
+                                </div>
+                                <% }) %>
+
+
+
+
+
+
+                </div>
+            </div>
+            <div class="right"></div>
+        </div>
+    </div>
+    <script>
+        var inputfile = document.querySelector("#input-file")
+        var inputfolder = document.querySelector("#input-folder")
+        var fileform = document.querySelector(".fileform")
+        var folderform = document.querySelector(".folderform")
+
+
+        document.querySelector("#add-file").addEventListener("click", function () {
+            inputfile.style.display = "initial";
+            inputfolder.style.display = "none";
+            inputfile.focus();
+
+            var input = document.querySelectorAll(".renaming input")
+            for (var i = 0; i < input.length; i++) {
+                input[i].style.display = "none";
+            }
+            var span = document.querySelectorAll(".renaming a span")
+            for (var i = 0; i < span.length; i++) {
+                span[i].style.display = "initial";
+            }
+        });
+
+
+        document.querySelector("#add-folder").addEventListener("click", function () {
+            inputfile.style.display = "none";
+            inputfolder.style.display = "initial";
+            inputfolder.focus()
+            
+            var input = document.querySelectorAll(".renaming input")
+            for (var i = 0; i < input.length; i++) {
+                input[i].style.display = "none";
+            }
+            var span = document.querySelectorAll(".renaming a span")
+            for (var i = 0; i < span.length; i++) {
+                span[i].style.display = "initial";
+            }
+            // yar ye input tag me click kr rha hu to FOCUS hi hat jaa rha hai 😥 
+            // Bugs solved
+        });
+
+
+        folderform.addEventListener("keydown", (dets) => {
+            if (dets.key == "Escape") {
+                folderform.style.opacity = "0"
+            }
+        });
+
+
+        fileform.addEventListener("keydown", (dets) => {
+            if (dets.key == "Escape") {
+                fileform.style.opacity = "0"
+            }
+        })
+
+        //yha opacity natak de rhi hai, chli jaa rhi hai to fir chli hi ja rhi hai 😣;
+
+        //rename part down
+        const files = document.querySelector(".files")
+        files.addEventListener("click", (dets) => {
+            if (dets.target.classList.contains("ri-registered-line")) {
+                dets.target.parentElement.parentElement.querySelector("input").style.display = "initial";
+                dets.target.parentElement.parentElement.querySelector("span").style.display = "none";
+                dets.target.parentElement.parentElement.querySelector("input").focus();
+            }
+        }, { once: true })
+
+
+    </script>
+</body>
+
+</html>
